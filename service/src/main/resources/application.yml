@@ -17,5 +17,5 @@ spring:
     activate:
       on-profile: local, default
 database:
-  tableName: SERVICES_EVENTS_ADMIN_SERVICE_LOCAL
+  tableName: SERVICES_SPRING_JUNIT_LOCAL
   endpoint: http://localhost:8000

@@ -18,9 +18,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("clients")
 public class ClientController {
-    private final com.ebsolutions.spring.junit.client.ClientService clientService;
+    private final ClientService clientService;
 
-    public ClientController(com.ebsolutions.spring.junit.client.ClientService clientService) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
@@ -28,6 +28,17 @@ public class ClientController {
     public ResponseEntity<?> create(@RequestBody List<@Valid Client> clients) {
         try {
             return ResponseEntity.ok(clientService.create(clients));
+        } catch (DataProcessingException dpe) {
+            return ResponseEntity.internalServerError().body(dpe.getMessage());
+        }
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAll() {
+        try {
+            List<Client> clients = clientService.readAll();
+
+            return !clients.isEmpty() ? ResponseEntity.ok(clients) : (ResponseEntity<?>) ResponseEntity.noContent();
         } catch (DataProcessingException dpe) {
             return ResponseEntity.internalServerError().body(dpe.getMessage());
         }

@@ -2,7 +2,6 @@ package com.ebsolutions.spring.junit.client;
 
 import com.ebsolutions.spring.junit.config.DatabaseConfig;
 import com.ebsolutions.spring.junit.model.Client;
-import com.ebsolutions.spring.junit.shared.MetricsStopwatch;
 import com.ebsolutions.spring.junit.shared.SortKeyType;
 import com.ebsolutions.spring.junit.shared.exception.DataProcessingException;
 import com.ebsolutions.spring.junit.shared.util.UniqueIdGenerator;
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.keyEqualTo;
+
 @Slf4j
 @Repository
 public class ClientDao {
@@ -34,7 +35,6 @@ public class ClientDao {
     }
 
     public List<Client> create(List<Client> clients) {
-        MetricsStopwatch metricsStopWatch = new MetricsStopwatch();
         try {
             LocalDateTime now = LocalDateTime.now();
 
@@ -79,11 +79,32 @@ public class ClientDao {
             ).collect(Collectors.toList());
 
         } catch (Exception e) {
-//            log.error("ERROR::{}", this.getClass().getName(), e);
             throw new DataProcessingException(MessageFormat.format("Error in {0}: {1}", this.getClass().getName(), e.getMessage()));
-//            throw new DataProcessingException(MessageFormat.format("Error in {0}", this.getClass().getName()), e);
-        } finally {
-            metricsStopWatch.logElapsedTime(MessageFormat.format("{0}::{1}", this.getClass().getName(), "create"));
+        }
+    }
+
+    public List<Client> readAll() throws DataProcessingException {
+        try {
+            List<ClientDto> clientDtos = clientTable
+                    .query(r -> r.queryConditional(
+                            keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
+                    )
+                    .items()
+                    .stream()
+                    .toList();
+
+            return clientDtos.stream()
+                    .map(clientDto ->
+                            Client.builder()
+                                    .clientId(StringUtils.remove(clientDto.getSortKey(), SortKeyType.CLIENT.name()))
+                                    .name(clientDto.getName())
+                                    .createdOn(clientDto.getCreatedOn())
+                                    .lastUpdatedOn(clientDto.getLastUpdatedOn())
+                                    .build()
+                    ).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("ERROR::{}", this.getClass().getName(), e);
+            throw new DataProcessingException(MessageFormat.format("Error in {0}", this.getClass().getName()), e);
         }
     }
 }

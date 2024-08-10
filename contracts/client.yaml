@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Clients REST API
+  version: "1.0"
+paths:
+  # TODO Same as shared issue?
+  /clients:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              $ref: "#/components/schemas/Client"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/Client"
+        '5XX':
+          description: Server Error
+
+components:
+  schemas:
+    Client:
+      type: object
+      required:
+        - name
+      properties:
+        clientId:
+          type: string
+        name:
+          type: string
+        createdOn:
+          type: string
+          format: date-time
+        lastUpdatedOn:
+          type: string
+          format: date-time

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ebsolutions.spring.junit</groupId>
+        <artifactId>spring-junit-parent</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <artifactId>spring-junit</artifactId>
+    <name>Events Admin Service</name>
+    <packaging>${packaging}</packaging>
+
+    <properties>
+        <packaging>jar</packaging>
+        <start-class>com.ebsolutions.spring.junit.SpringJunitApplication</start-class>
+
+        <!-- Versions: Plugins-->
+
+        <!-- Versions: Dependencies -->
+        <version.org.projectlombok.lombok>1.18.34</version.org.projectlombok.lombok>
+        <version.software.amazon.awssdk.bom>2.25.55</version.software.amazon.awssdk.bom>
+        <version.org.apache.commons.commons-lang3>3.13.0</version.org.apache.commons.commons-lang3>
+        <version.org.openapitools.jackson-databind-nullable>
+            0.2.6
+        </version.org.openapitools.jackson-databind-nullable>
+        <version.org.springdoc.springdoc-openapi-starter-webmvc-ui>
+            2.6.0
+        </version.org.springdoc.springdoc-openapi-starter-webmvc-ui>
+
+        <!-- Versions: Testing -->
+        <version.org.junit.junit-bom>5.10.2</version.org.junit.junit-bom>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- AWS SDK library needed for Database and File Storage access -->
+            <!-- Version: Explicit -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${version.software.amazon.awssdk.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Java testing framework -->
+            <!-- Version: Explicit -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.org.junit.junit-bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- START: Spring Dependencies -->
+
+        <!-- Contains Spring Boot Starter and Tomcat web server -->
+        <!-- Version: Spring Parent -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Exposes the actuator API health/info/etc. -->
+        <!-- Version: Spring Parent -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Allows for Log4j2 as the logging framework -->
+        <!-- Version: Spring Parent -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+        <!-- Used for validation annotations -->
+        <!-- Version: Spring Parent -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- END: Spring Dependencies -->
+
+        <!-- START: AWS Dependencies -->
+
+        <!-- AWS DynamoDB config and methods -->
+        <!-- Version: BOM -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb-enhanced</artifactId>
+        </dependency>
+
+        <!-- END: AWS Dependencies -->
+
+        <!-- START: Third Party Dependencies -->
+
+        <!-- Used for Swagger UI and Open API annotations -->
+        <!-- Version: Explicit -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${version.org.springdoc.springdoc-openapi-starter-webmvc-ui}</version>
+        </dependency>
+
+        <!-- Used for POJO annotations within project -->
+        <!-- Version: Explicit -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version.org.projectlombok.lombok}</version>
+        </dependency>
+
+        <!-- StringUtils util that checks for empty strings, etc. -->
+        <!-- Version: Explicit -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${version.org.apache.commons.commons-lang3}</version>
+        </dependency>
+
+        <!-- Used for the validation annotations -->
+        <!-- Version: Explicit -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${version.org.openapitools.jackson-databind-nullable}</version>
+        </dependency>
+
+        <!-- END: Third Party Dependencies -->
+
+        <!-- START: Testing Dependencies -->
+
+        <!-- END: Testing Dependencies -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Gives the actuator/info API build information -->
+            <!-- Version: Spring Parent -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Generates Java classes from OpenAPI contracts -->
+            <!-- Version: Explicit: Parent Pom -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>models-client</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${pom.parent.basedir}/contracts/client.yaml</inputSpec>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

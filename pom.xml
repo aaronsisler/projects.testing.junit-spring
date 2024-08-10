@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+    </parent>
+
+    <groupId>com.ebsolutions.spring.junit</groupId>
+    <artifactId>spring-junit-parent</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>service</module>
+    </modules>
+
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Versions: Plugins -->
+        <version.plugins.maven-surefire-plugin>3.2.5</version.plugins.maven-surefire-plugin>
+        <version.plugins.openapi-generator-maven-plugin>7.5.0</version.plugins.openapi-generator-maven-plugin>
+
+        <!-- Versions: Dependencies -->
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- This allows all unit tests to complete, finish tear down, and then report failures -->
+                <!-- Version: Explicit -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.plugins.maven-surefire-plugin}</version>
+                </plugin>
+
+                <!-- Generates Java classes from OpenAPI contracts -->
+                <!-- Version: Explicit -->
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>${version.plugins.openapi-generator-maven-plugin}</version>
+                    <configuration>
+                        <modelPackage>com.ebsolutions.spring.junit.model</modelPackage>
+                        <generatorName>spring</generatorName>
+                        <generateApis>false</generateApis>
+                        <generateSupportingFiles>false</generateSupportingFiles>
+                        <configOptions>
+                            <serializableModel>true</serializableModel>
+                            <useSpringBoot3>true</useSpringBoot3>
+                            <additionalModelTypeAnnotations>
+                                @lombok.experimental.SuperBuilder
+                            </additionalModelTypeAnnotations>
+                        </configOptions>
+                        <!-- typeMappings links the contract (left side) to the right side -->
+                        <typeMappings>
+                            <!-- This Pascal format is the standard for baked in OpenAPI supported types -->
+                            <typeMapping>DateTime=LocalDateTime</typeMapping>
+                            <!-- Kebab format is the format for custom mappings  -->
+                            <typeMapping>local-date=LocalDate</typeMapping>
+                            <typeMapping>local-time=LocalTime</typeMapping>
+                            <typeMapping>day-of-week=DayOfWeek</typeMapping>
+                        </typeMappings>
+                        <!-- importMappings then links the typeMapping (left side) to a Java import (right side) -->
+                        <importMappings>
+                            <!-- Left side in importMappings maps to the right side in typeMappings -->
+                            <importMapping>LocalDateTime=java.time.LocalDateTime</importMapping>
+                            <importMapping>LocalDate=java.time.LocalDate</importMapping>
+                            <importMapping>LocalTime=java.time.LocalTime</importMapping>
+                            <importMapping>DayOfWeek=java.time.DayOfWeek</importMapping>
+                        </importMappings>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

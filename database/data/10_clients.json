@@ -1,0 +1,109 @@
+{
+  "SERVICES_SPRING_JUNIT_LOCAL": [
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "CLIENT"
+          },
+          "sortKey": {
+            "S": "CLIENT-get-client-client-id"
+          },
+          "name": {
+            "S": "Get Client - Client Name"
+          },
+          "createdOn": {
+            "S": "2023-07-04T01:02:34"
+          },
+          "lastUpdatedOn": {
+            "S": "2023-11-05T12:34:56"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "CLIENT"
+          },
+          "sortKey": {
+            "S": "CLIENT-get-all-clients-client-1-client-id"
+          },
+          "name": {
+            "S": "Get All Clients - Client 1 Name"
+          },
+          "createdOn": {
+            "S": "2023-07-04T01:02:34"
+          },
+          "lastUpdatedOn": {
+            "S": "2023-11-05T12:34:56"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "CLIENT"
+          },
+          "sortKey": {
+            "S": "CLIENT-get-all-clients-client-2-client-id"
+          },
+          "name": {
+            "S": "Get All Clients - Client 2 Name"
+          },
+          "createdOn": {
+            "S": "2023-07-04T01:02:34"
+          },
+          "lastUpdatedOn": {
+            "S": "2023-11-05T12:34:56"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "CLIENT"
+          },
+          "sortKey": {
+            "S": "CLIENT-delete-client-client-id"
+          },
+          "name": {
+            "S": "Delete Client - Client Name"
+          },
+          "createdOn": {
+            "S": "2023-07-04T01:02:34"
+          },
+          "lastUpdatedOn": {
+            "S": "2023-11-05T12:34:56"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "CLIENT"
+          },
+          "sortKey": {
+            "S": "CLIENT-update-client-client-id"
+          },
+          "name": {
+            "S": "Update Client - Client Name"
+          },
+          "createdOn": {
+            "S": "2023-07-04T01:02:34"
+          },
+          "lastUpdatedOn": {
+            "S": "2023-11-05T12:34:56"
+          }
+        }
+      }
+    }
+  ]
+}

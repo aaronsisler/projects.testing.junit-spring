@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+# This isn't currently used, just for reference.
+# The table is created in init-scripts/10-table-creation.sh
+
+Resources:
+  ServicesAdminDutiesLocal:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: SERVICES_SPRING_JUNIT_LOCAL
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: partitionKey
+          AttributeType: S
+        - AttributeName: sortKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: partitionKey
+          KeyType: HASH
+        - AttributeName: sortKey
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true

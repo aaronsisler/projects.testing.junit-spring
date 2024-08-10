@@ -8,13 +8,13 @@
         <version>0.1.0</version>
     </parent>
 
-    <artifactId>spring-junit</artifactId>
-    <name>Events Admin Service</name>
+    <artifactId>spring-junit-service</artifactId>
+    <name>Spring Junit Service</name>
     <packaging>${packaging}</packaging>
 
     <properties>
         <packaging>jar</packaging>
-        <start-class>com.ebsolutions.spring.junit.SpringJunitApplication</start-class>
+        <start-class>com.ebsolutions.spring.junit.SpringJunitServiceApplication</start-class>
 
         <!-- Versions: Plugins-->
 

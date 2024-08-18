@@ -8,6 +8,7 @@ services:
 #      - DEFAULT_REGION=us-east-1
 #      - AWS_DEFAULT_REGION=us-east-1
     volumes:
+      - ./database/cloud-formation/:/etc/localstack
       - ./database/init-scripts/init-localstack-setup.sh:/etc/localstack/init/ready.d/script.sh
     #    container_name: database
     #    ports:

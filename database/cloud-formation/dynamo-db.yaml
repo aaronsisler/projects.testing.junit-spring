@@ -1,8 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-# This isn't currently used, just for reference.
-# The table is created in init-scripts/10-table-creation.sh
-
 Resources:
   ServicesAdminDutiesLocal:
     Type: "AWS::DynamoDB::Table"

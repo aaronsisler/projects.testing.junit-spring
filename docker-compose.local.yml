@@ -1,41 +1,18 @@
 services:
   database:
+    container_name: database
     image: localstack/localstack:latest
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=dynamodb
+      - SERVICES=cloudformation,dynamodb
 #      - DEFAULT_REGION=us-east-1
 #      - AWS_DEFAULT_REGION=us-east-1
     volumes:
-#      - ./database/cloud-formation/:/etc/localstack
+      # This is called when Localstack container is starting up.
+      # Using this for AWS CLI commands currently.
       - ./database/init-scripts/init-localstack-setup.sh:/etc/localstack/init/ready.d/script.sh
-    #    container_name: database
-    #    ports:
-    #      - "8000:8000"
-#  database:
-#    image: amazon/dynamodb-local:latest
-#    container_name: database
-#    ports:
-#      - "8000:8000"
-#    command: " -jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-#    volumes:
-#      - "./docker/dynamodb:/home/dynamodblocal/data"
-#    working_dir: /home/dynamodblocal
-#
-#  populate-data:
-#    image: amazon/aws-cli
-#    depends_on:
-#      - database
-#    environment:
-#      AWS_ENDPOINT: --endpoint-url=http://database:8000
-#    entrypoint: /bin/sh -c
-#    volumes:
-#      - "./database/init-scripts:/init-scripts"
-#      - "./database/data:/data"
-#    command: >
-#      '
-#       for script_name in /init-scripts/*.sh; do
-#         sh $$script_name
-#       done
-#      '
+      - ./database/init-scripts/dynamodb-table-definition.json:/opt/code/localstack/dynamodb-table-definition.json
+      # This isn't used right now but here for previous working example
+      # This is the Cloudformation template for the DynamoDB table
+#      - ./database/cloud-formation/dynamo-db.yaml:/opt/code/localstack/dynamo-db.yaml

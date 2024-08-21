@@ -38,7 +38,7 @@ public class ClientController {
         try {
             List<Client> clients = clientService.readAll();
 
-            return !clients.isEmpty() ? ResponseEntity.ok(clients) : (ResponseEntity<?>) ResponseEntity.noContent();
+            return !clients.isEmpty() ? ResponseEntity.ok(clients) : ResponseEntity.noContent().build();
         } catch (DataProcessingException dpe) {
             return ResponseEntity.internalServerError().body(dpe.getMessage());
         }

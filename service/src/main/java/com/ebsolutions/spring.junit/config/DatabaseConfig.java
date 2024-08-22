@@ -27,6 +27,7 @@ public class DatabaseConfig {
 
     @Bean
     @Profile({"local", "default"})
+//    @Profile({"local"})
     public DynamoDbEnhancedClient localClientInstantiation() {
         DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
                 .endpointOverride(URI.create(endpoint))

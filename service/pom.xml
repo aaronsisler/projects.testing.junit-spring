@@ -20,7 +20,7 @@
 
         <!-- Versions: Dependencies -->
         <version.org.projectlombok.lombok>1.18.34</version.org.projectlombok.lombok>
-        <version.software.amazon.awssdk.bom>2.25.55</version.software.amazon.awssdk.bom>
+        <version.software.amazon.awssdk.bom>2.27.9</version.software.amazon.awssdk.bom>
         <version.org.apache.commons.commons-lang3>3.13.0</version.org.apache.commons.commons-lang3>
         <version.org.openapitools.jackson-databind-nullable>
             0.2.6
@@ -30,7 +30,7 @@
         </version.org.springdoc.springdoc-openapi-starter-webmvc-ui>
 
         <!-- Versions: Testing -->
-        <version.org.junit.junit-bom>5.10.2</version.org.junit.junit-bom>
+        <version.org.junit.junit-bom>5.10.3</version.org.junit.junit-bom>
     </properties>
 
     <dependencyManagement>
@@ -143,6 +143,12 @@
         <!-- END: Third Party Dependencies -->
 
         <!-- START: Testing Dependencies -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- END: Testing Dependencies -->
     </dependencies>

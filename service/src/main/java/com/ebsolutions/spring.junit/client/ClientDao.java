@@ -30,7 +30,6 @@ public class ClientDao {
     private final DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
     public ClientDao(DynamoDbEnhancedClient dynamoDbEnhancedClient, DatabaseConfig databaseConfig) {
-        System.out.println("In the DAO INIT");
         this.clientTable = dynamoDbEnhancedClient.table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
         this.dynamoDbEnhancedClient = dynamoDbEnhancedClient;
     }

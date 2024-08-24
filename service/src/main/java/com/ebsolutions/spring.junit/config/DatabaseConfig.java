@@ -1,8 +1,10 @@
 package com.ebsolutions.spring.junit.config;
 
 
+import com.ebsolutions.spring.junit.Constants;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +28,9 @@ public class DatabaseConfig {
     protected String endpoint;
 
     @Bean
-    @Profile({"local", "default"})
-//    @Profile({"local"})
+    @Profile({"local"})
     public DynamoDbEnhancedClient localClientInstantiation() {
+        System.out.println("INSIDE local DatabaseConfig");
         DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
                 .endpointOverride(URI.create(endpoint))
                 .region(Region.US_EAST_1)
@@ -36,6 +38,11 @@ public class DatabaseConfig {
                 .build();
 
         return DynamoDbEnhancedClient.builder().dynamoDbClient(dynamoDbClient).build();
+    }
+
+    @Bean
+    public DynamoDbEnhancedClient defaultDynamoDbEnhancedClient() {
+        throw new NotImplementedException(Constants.PROFILE_NOT_SUPPORTED);
     }
 
     private StaticCredentialsProvider staticCredentialsProvider() {

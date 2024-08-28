@@ -5,7 +5,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 
 @TestConfiguration
-public class CommonTestConfiguration {
+public class BaseTestConfiguration {
     @MockBean
     private DynamoDbEnhancedClient dynamoDbEnhancedClient;
 }

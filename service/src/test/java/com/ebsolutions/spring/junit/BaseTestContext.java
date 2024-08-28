@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(CommonTestConfiguration.class)
+@Import(BaseTestConfiguration.class)
 public class BaseTestContext {
 }

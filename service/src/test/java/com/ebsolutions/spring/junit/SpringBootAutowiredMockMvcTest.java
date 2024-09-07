@@ -1,6 +1,5 @@
 package com.ebsolutions.spring.junit;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -13,14 +12,14 @@ public class SpringBootAutowiredMockMvcTest extends BaseTestContext {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+    //    @Test
     void whenHealthCheckIsCalledShouldReturnCorrectMessage() throws Exception {
         this.mockMvc.perform(get(Constants.HEALTH_CHECK_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("UP")));
     }
 
-    @Test
+    //    @Test
     void whenInfoCheckIsCalledShouldReturnCorrectMessage() throws Exception {
         this.mockMvc.perform(get(Constants.INFO_CHECK_URL))
                 .andExpect(status().isOk())

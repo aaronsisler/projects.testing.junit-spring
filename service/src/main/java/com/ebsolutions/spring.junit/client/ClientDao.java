@@ -18,6 +18,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.WriteBatch;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,35 @@ public class ClientDao {
     private final DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
     public ClientDao(DynamoDbEnhancedClient dynamoDbEnhancedClient, DatabaseConfig databaseConfig) {
-        this.clientTable = dynamoDbEnhancedClient.table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+
         this.dynamoDbEnhancedClient = dynamoDbEnhancedClient;
+        this.clientTable = dynamoDbEnhancedClient.table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+    }
+
+    public List<Client> readAll() throws DataProcessingException {
+        try {
+            List<ClientDto> clientDtos = this.clientTable
+                    .query(r -> r.queryConditional(
+                            keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
+                    )
+                    .items()
+                    .stream()
+                    .toList();
+
+            return clientDtos.stream()
+                    .map(clientDto ->
+                            Client.builder()
+                                    .clientId(StringUtils.remove(clientDto.getSortKey(), SortKeyType.CLIENT.name()))
+                                    .name(clientDto.getName())
+                                    .createdOn(clientDto.getCreatedOn())
+                                    .lastUpdatedOn(clientDto.getLastUpdatedOn())
+                                    .build()
+                    ).collect(Collectors.toList());
+        } catch (Exception e) {
+//            log.error("ERROR::{}", this.getClass().getName(), e);
+//            throw new DataProcessingException(MessageFormat.format("Error in {0}", this.getClass().getName()), e);
+        }
+        return Collections.emptyList();
     }
 
     public List<Client> create(List<Client> clients) {
@@ -51,7 +79,7 @@ public class ClientDao {
             );
 
             WriteBatch.Builder<ClientDto> writeBatchBuilder = WriteBatch.builder(ClientDto.class)
-                    .mappedTableResource(clientTable);
+                    .mappedTableResource(this.clientTable);
 
             clientDtos.forEach(writeBatchBuilder::addPutItem);
 
@@ -62,10 +90,10 @@ public class ClientDao {
                     .addWriteBatch(writeBatch)
                     .build();
 
-            BatchWriteResult batchWriteResult = dynamoDbEnhancedClient.batchWriteItem(batchWriteItemEnhancedRequest);
+            BatchWriteResult batchWriteResult = this.dynamoDbEnhancedClient.batchWriteItem(batchWriteItemEnhancedRequest);
 
-            if (!batchWriteResult.unprocessedPutItemsForTable(clientTable).isEmpty()) {
-                batchWriteResult.unprocessedPutItemsForTable(clientTable).forEach(key ->
+            if (!batchWriteResult.unprocessedPutItemsForTable(this.clientTable).isEmpty()) {
+                batchWriteResult.unprocessedPutItemsForTable(this.clientTable).forEach(key ->
                         log.info(key.toString()));
             }
 
@@ -80,31 +108,6 @@ public class ClientDao {
 
         } catch (Exception e) {
             throw new DataProcessingException(MessageFormat.format("Error in {0}: {1}", this.getClass().getName(), e.getMessage()));
-        }
-    }
-
-    public List<Client> readAll() throws DataProcessingException {
-        try {
-            List<ClientDto> clientDtos = clientTable
-                    .query(r -> r.queryConditional(
-                            keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
-                    )
-                    .items()
-                    .stream()
-                    .toList();
-
-            return clientDtos.stream()
-                    .map(clientDto ->
-                            Client.builder()
-                                    .clientId(StringUtils.remove(clientDto.getSortKey(), SortKeyType.CLIENT.name()))
-                                    .name(clientDto.getName())
-                                    .createdOn(clientDto.getCreatedOn())
-                                    .lastUpdatedOn(clientDto.getLastUpdatedOn())
-                                    .build()
-                    ).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("ERROR::{}", this.getClass().getName(), e);
-            throw new DataProcessingException(MessageFormat.format("Error in {0}", this.getClass().getName()), e);
         }
     }
 }

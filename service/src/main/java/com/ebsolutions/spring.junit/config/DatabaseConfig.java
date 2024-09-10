@@ -22,13 +22,10 @@ import java.net.URI;
 public class DatabaseConfig {
     @Getter
     @Value("${database.tableName:`Database table name not found in environment`}")
-    public String tableName;
+    public static String tableName;
 
     @Value("${database.endpoint:`Database endpoint not found in environment`}")
     protected String endpoint;
-
-    @Value("${spring.profiles.active:default}")
-    private String activeProfiles;
 
     @Bean
     @Profile({"local"})
@@ -46,7 +43,6 @@ public class DatabaseConfig {
     @Bean
     @Profile({"default"})
     public DynamoDbEnhancedClient defaultDynamoDbEnhancedClient() {
-        System.out.println("IN the Database config for default?");
         throw new NotImplementedException(Constants.PROFILE_NOT_SUPPORTED);
     }
 

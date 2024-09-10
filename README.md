@@ -16,9 +16,16 @@
 
 ### Notes
 
-* When there is a @Bean annotation that is not satisfied correctly, the Spring application will fail to start.
+* When there is a @Bean annotation within the application that is not satisfied correctly, the Spring application will
+  fail to start.
 * In the DatabaseConfig, the "default" profile having a NotImplementedException causes a similar issue.
-* You can add a needed @MockBean the class denoted with either @TestConfiguration or @SpringBootTest.
+* When there is a required @Bean you can add a @MockBean in the class denoted with either @TestConfiguration or
+  @SpringBootTest.
 * You cannot have duplicated @MockBean of the same class in both the @TestConfiguration and @SpringBootTest.
-
+* If you do a @MockBean in either @TestConfiguration or @SpringBootTest, the class provided to the constructor will both
+  be Mockito based and the same memory location for either @MockBean placement.
+* If you do a @MockBean in either @TestConfiguration or @SpringBootTest and then do an @Autowired for the same class
+  within the test, it is also the same memory location.
+* It seems VERY hard to @Bean the TableSchema class such that it works in ClientDao as needed for the @MockBean side in
+  testing. 
 

@@ -18,7 +18,6 @@ import software.amazon.awssdk.enhanced.dynamodb.model.WriteBatch;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,18 +26,18 @@ import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.ke
 @Slf4j
 @Repository
 public class ClientDao {
-    private final DynamoDbTable<ClientDto> clientTable;
     private final DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
-    public ClientDao(DynamoDbEnhancedClient dynamoDbEnhancedClient, DatabaseConfig databaseConfig) {
-
+    public ClientDao(DynamoDbEnhancedClient dynamoDbEnhancedClient) {
         this.dynamoDbEnhancedClient = dynamoDbEnhancedClient;
-        this.clientTable = dynamoDbEnhancedClient.table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
     }
 
     public List<Client> readAll() throws DataProcessingException {
         try {
-            List<ClientDto> clientDtos = this.clientTable
+            DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
+                    .table(DatabaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+
+            List<ClientDto> clientDtos = clientTable
                     .query(r -> r.queryConditional(
                             keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
                     )
@@ -56,10 +55,9 @@ public class ClientDao {
                                     .build()
                     ).collect(Collectors.toList());
         } catch (Exception e) {
-//            log.error("ERROR::{}", this.getClass().getName(), e);
-//            throw new DataProcessingException(MessageFormat.format("Error in {0}", this.getClass().getName()), e);
+            log.error("ERROR::{}", this.getClass().getName(), e);
+            throw new DataProcessingException(MessageFormat.format("Error in {0}", this.getClass().getName()), e);
         }
-        return Collections.emptyList();
     }
 
     public List<Client> create(List<Client> clients) {
@@ -78,8 +76,11 @@ public class ClientDao {
                             .build())
             );
 
+            DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
+                    .table(DatabaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+
             WriteBatch.Builder<ClientDto> writeBatchBuilder = WriteBatch.builder(ClientDto.class)
-                    .mappedTableResource(this.clientTable);
+                    .mappedTableResource(clientTable);
 
             clientDtos.forEach(writeBatchBuilder::addPutItem);
 
@@ -92,8 +93,8 @@ public class ClientDao {
 
             BatchWriteResult batchWriteResult = this.dynamoDbEnhancedClient.batchWriteItem(batchWriteItemEnhancedRequest);
 
-            if (!batchWriteResult.unprocessedPutItemsForTable(this.clientTable).isEmpty()) {
-                batchWriteResult.unprocessedPutItemsForTable(this.clientTable).forEach(key ->
+            if (!batchWriteResult.unprocessedPutItemsForTable(clientTable).isEmpty()) {
+                batchWriteResult.unprocessedPutItemsForTable(clientTable).forEach(key ->
                         log.info(key.toString()));
             }
 

@@ -5,6 +5,7 @@ import com.ebsolutions.spring.junit.model.Client;
 import com.ebsolutions.spring.junit.shared.SortKeyType;
 import com.ebsolutions.spring.junit.shared.exception.DataProcessingException;
 import com.ebsolutions.spring.junit.shared.util.UniqueIdGenerator;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteResult;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.WriteBatch;
 
 import java.text.MessageFormat;
@@ -21,25 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.keyEqualTo;
-
 @Slf4j
 @Repository
+@AllArgsConstructor
 public class ClientDao {
     private final DynamoDbEnhancedClient dynamoDbEnhancedClient;
-
-    public ClientDao(DynamoDbEnhancedClient dynamoDbEnhancedClient) {
-        this.dynamoDbEnhancedClient = dynamoDbEnhancedClient;
-    }
+    private final DatabaseConfig databaseConfig;
 
     public List<Client> readAll() throws DataProcessingException {
         try {
             DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
-                    .table(DatabaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+                    .table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
 
+//            Key clientPartitionKey = Key.builder().partitionValue(SortKeyType.CLIENT.name()).build();
+//            QueryConditional clientQueryConditional = QueryConditional.keyEqualTo(clientPartitionKey);
+//            List<ClientDto> clientDtos = clientTable.query(clientQueryConditional).items().stream().toList();
             List<ClientDto> clientDtos = clientTable
                     .query(r -> r.queryConditional(
-                            keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
+                            QueryConditional.keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
                     )
                     .items()
                     .stream()
@@ -77,7 +78,7 @@ public class ClientDao {
             );
 
             DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
-                    .table(DatabaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+                    .table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
 
             WriteBatch.Builder<ClientDto> writeBatchBuilder = WriteBatch.builder(ClientDto.class)
                     .mappedTableResource(clientTable);

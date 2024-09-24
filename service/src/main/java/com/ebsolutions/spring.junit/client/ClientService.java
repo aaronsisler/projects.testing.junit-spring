@@ -10,6 +10,7 @@ public class ClientService {
     private final ClientDao clientDao;
 
     public ClientService(ClientDao clientDao) {
+//        System.out.println("APP: INSIDE: Constructor: ClientService");
         this.clientDao = clientDao;
     }
 

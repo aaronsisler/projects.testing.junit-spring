@@ -21,6 +21,7 @@ public class ClientController {
     private final ClientService clientService;
 
     public ClientController(ClientService clientService) {
+//        System.out.println("APP: INSIDE: Constructor: ClientController");
         this.clientService = clientService;
     }
 

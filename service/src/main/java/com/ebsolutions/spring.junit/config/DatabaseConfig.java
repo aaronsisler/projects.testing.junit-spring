@@ -22,7 +22,7 @@ import java.net.URI;
 public class DatabaseConfig {
     @Getter
     @Value("${database.tableName:`Database table name not found in environment`}")
-    public static String tableName;
+    public String tableName;
 
     @Value("${database.endpoint:`Database endpoint not found in environment`}")
     protected String endpoint;
@@ -30,7 +30,8 @@ public class DatabaseConfig {
     @Bean
     @Profile({"local"})
     public DynamoDbEnhancedClient localClientInstantiation() {
-        System.out.println("INSIDE local DatabaseConfig");
+        System.out.println("APP: INSIDE: DatabaseConfig: localClientInstantiation");
+
         DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
                 .endpointOverride(URI.create(endpoint))
                 .region(Region.US_EAST_1)

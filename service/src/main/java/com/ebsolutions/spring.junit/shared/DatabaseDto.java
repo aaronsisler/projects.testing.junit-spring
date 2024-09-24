@@ -30,7 +30,9 @@ public abstract class DatabaseDto implements Serializable {
     @NonNull
     private String name;
 
+    @NonNull
     private LocalDateTime createdOn;
 
+    @NonNull
     private LocalDateTime lastUpdatedOn;
 }

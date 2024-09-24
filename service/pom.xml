@@ -102,6 +102,13 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>dynamodb-enhanced</artifactId>
+            <exclusions>
+                <!-- Excluding given Standard Commons Logging is in conflict with spring-jcl -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- END: AWS Dependencies -->
@@ -144,6 +151,8 @@
 
         <!-- START: Testing Dependencies -->
 
+        <!-- Used for Spring test context and annotations -->
+        <!-- Version: Spring Parent -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

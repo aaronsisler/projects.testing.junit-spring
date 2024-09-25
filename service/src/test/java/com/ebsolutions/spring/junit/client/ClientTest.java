@@ -1,6 +1,8 @@
 package com.ebsolutions.spring.junit.client;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.ebsolutions.spring.junit.BaseTestContext;
 import com.ebsolutions.spring.junit.Constants;
@@ -43,6 +45,8 @@ public class ClientTest extends BaseTestContext {
 
   private List<ClientDto> clientDtos = new ArrayList<>();
 
+  private final LocalDateTime now = LocalDateTime.now();
+
 
   @BeforeEach
   void setup() {
@@ -69,14 +73,18 @@ public class ClientTest extends BaseTestContext {
         .name("First Client Name")
         .partitionKey(SortKeyType.CLIENT.name())
         .sortKey("firstClientSortKey")
-        .createdOn(LocalDateTime.now())
-        .lastUpdatedOn(LocalDateTime.now())
+        .createdOn(now)
+        .lastUpdatedOn(now)
         .build();
 
     clientDtos.add(firstClientDto);
     Mockito.when(clientDtoStream.toList()).thenReturn(clientDtos);
 
     this.mockMvc.perform(get(Constants.CLIENTS_URL))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(jsonPath("$[0].name", is("First Client Name")))
+        .andExpect(jsonPath("$[0].clientId", is("firstClientSortKey")))
+        .andExpect(jsonPath("$[0].createdOn", is(now.toString())))
+        .andExpect(jsonPath("$[0].lastUpdatedOn", is(now.toString())));
   }
 }

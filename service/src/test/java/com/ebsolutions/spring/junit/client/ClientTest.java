@@ -15,7 +15,7 @@ import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,9 +48,9 @@ public class ClientTest extends BaseTestContext {
     @BeforeEach
     void setup() {
         Mockito.when(dynamoDbEnhancedClient.table(Mockito.eq(databaseConfig.getTableName()), ArgumentMatchers.<TableSchema<ClientDto>>any())).thenReturn(clientDtoDynamoDbTable);
-//        Mockito.when(clientDtoDynamoDbTable.query(ArgumentMatchers.any(QueryConditional.class))).thenReturn(pageIterable);
+        Mockito.when(clientDtoDynamoDbTable.query(ArgumentMatchers.any(QueryConditional.class))).thenReturn(pageIterable);
 //        Mockito.when(clientDtoDynamoDbTable.query((QueryEnhancedRequest) ArgumentMatchers.any())).thenReturn(pageIterable);
-        Mockito.when(clientDtoDynamoDbTable.query(ArgumentMatchers.<QueryEnhancedRequest>any())).thenReturn(pageIterable);
+//        Mockito.when(clientDtoDynamoDbTable.query(ArgumentMatchers.<QueryEnhancedRequest>any())).thenReturn(pageIterable);
         Mockito.when(pageIterable.items()).thenReturn(sdkIterableItems);
         Mockito.when(sdkIterableItems.stream()).thenReturn(clientDtoStream);
     }

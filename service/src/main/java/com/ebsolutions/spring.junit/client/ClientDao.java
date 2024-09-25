@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteResult;
@@ -35,12 +36,14 @@ public class ClientDao {
             DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
                     .table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
 
-//            Key clientPartitionKey = Key.builder().partitionValue(SortKeyType.CLIENT.name()).build();
-//            QueryConditional clientQueryConditional = QueryConditional.keyEqualTo(clientPartitionKey);
-//            List<ClientDto> clientDtos = clientTable.query(clientQueryConditional).items().stream().toList();
             List<ClientDto> clientDtos = clientTable
-                    .query(r -> r.queryConditional(
-                            QueryConditional.keyEqualTo(s -> s.partitionValue(SortKeyType.CLIENT.name()).build()))
+                    .query(
+                            QueryConditional.keyEqualTo(
+                                    Key
+                                            .builder()
+                                            .partitionValue(SortKeyType.CLIENT.name())
+                                            .build()
+                            )
                     )
                     .items()
                     .stream()

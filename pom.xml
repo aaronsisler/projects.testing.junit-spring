@@ -42,6 +42,8 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- Maintains strict Code Styles -->
+                <!-- Version: Explicit -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>

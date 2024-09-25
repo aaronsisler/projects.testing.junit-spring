@@ -160,6 +160,8 @@
 
     <build>
         <plugins>
+            <!-- Maintains strict Code Styles -->
+            <!-- Version: Explicit: Parent Pom -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

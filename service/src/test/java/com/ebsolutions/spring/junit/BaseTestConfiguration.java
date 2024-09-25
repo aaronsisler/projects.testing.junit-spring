@@ -6,6 +6,6 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 
 @TestConfiguration
 public class BaseTestConfiguration {
-    @MockBean
-    private DynamoDbEnhancedClient dynamoDbEnhancedClient;
+  @MockBean
+  private DynamoDbEnhancedClient dynamoDbEnhancedClient;
 }

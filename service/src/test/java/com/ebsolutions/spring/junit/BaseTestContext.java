@@ -11,9 +11,9 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 @AutoConfigureMockMvc
 @Import(BaseTestConfiguration.class)
 public class BaseTestContext {
-    @Autowired
-    public DynamoDbEnhancedClient dynamoDbEnhancedClient;
+  @Autowired
+  public DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
-    @Autowired
-    public DatabaseConfig databaseConfig;
+  @Autowired
+  public DatabaseConfig databaseConfig;
 }

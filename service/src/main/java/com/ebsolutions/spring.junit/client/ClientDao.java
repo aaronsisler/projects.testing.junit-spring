@@ -32,8 +32,7 @@ public class ClientDao {
 
   public List<Client> readAll() throws DataProcessingException {
     try {
-      DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
-          .table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
+      DynamoDbTable<ClientDto> clientTable = clientDtoDynamoDbTable();
 
       List<ClientDto> clientDtos = clientTable
           .query(
@@ -80,26 +79,24 @@ public class ClientDao {
               .build())
       );
 
-      DynamoDbTable<ClientDto> clientTable = dynamoDbEnhancedClient
-          .table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
-
-      WriteBatch.Builder<ClientDto> writeBatchBuilder = WriteBatch.builder(ClientDto.class)
-          .mappedTableResource(clientTable);
+      WriteBatch.Builder<ClientDto> writeBatchBuilder = WriteBatch.builder(ClientDto.class);
 
       clientDtos.forEach(writeBatchBuilder::addPutItem);
 
-      WriteBatch writeBatch = writeBatchBuilder.build();
-
-      BatchWriteItemEnhancedRequest batchWriteItemEnhancedRequest = BatchWriteItemEnhancedRequest
-          .builder()
-          .addWriteBatch(writeBatch)
+      WriteBatch writeBatch = writeBatchBuilder
+          .mappedTableResource(clientDtoDynamoDbTable())
           .build();
 
       BatchWriteResult batchWriteResult =
-          this.dynamoDbEnhancedClient.batchWriteItem(batchWriteItemEnhancedRequest);
+          this.dynamoDbEnhancedClient.batchWriteItem(
+              BatchWriteItemEnhancedRequest
+                  .builder()
+                  .addWriteBatch(writeBatch)
+                  .build()
+          );
 
-      if (!batchWriteResult.unprocessedPutItemsForTable(clientTable).isEmpty()) {
-        batchWriteResult.unprocessedPutItemsForTable(clientTable).forEach(key ->
+      if (!batchWriteResult.unprocessedPutItemsForTable(clientDtoDynamoDbTable()).isEmpty()) {
+        batchWriteResult.unprocessedPutItemsForTable(clientDtoDynamoDbTable()).forEach(key ->
             log.info(key.toString()));
       }
 
@@ -116,5 +113,10 @@ public class ClientDao {
       throw new DataProcessingException(
           MessageFormat.format("Error in {0}: {1}", this.getClass().getName(), e.getMessage()));
     }
+  }
+
+  private DynamoDbTable<ClientDto> clientDtoDynamoDbTable() {
+    return dynamoDbEnhancedClient
+        .table(databaseConfig.getTableName(), TableSchema.fromBean(ClientDto.class));
   }
 }

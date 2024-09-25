@@ -4,7 +4,6 @@ package com.ebsolutions.spring.junit.config;
 import com.ebsolutions.spring.junit.Constants;
 import java.net.URI;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@Slf4j
 @Configuration
 public class DatabaseConfig {
   @Getter
@@ -29,8 +27,6 @@ public class DatabaseConfig {
   @Bean
   @Profile({"local"})
   public DynamoDbEnhancedClient localClientInstantiation() {
-    System.out.println("APP: INSIDE: DatabaseConfig: localClientInstantiation");
-
     DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
         .endpointOverride(URI.create(endpoint))
         .region(Region.US_EAST_1)

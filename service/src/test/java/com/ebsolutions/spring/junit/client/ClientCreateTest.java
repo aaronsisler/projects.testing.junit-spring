@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ebsolutions.spring.junit.BaseTestContext;
 import com.ebsolutions.spring.junit.Constants;
 import com.ebsolutions.spring.junit.shared.SortKeyType;
+import com.ebsolutions.spring.junit.shared.exception.DataProcessingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,9 +53,12 @@ public class ClientCreateTest extends BaseTestContext {
   void setup() {
     Mockito.when(dynamoDbEnhancedClient.table(Mockito.eq(databaseConfig.getTableName()),
         ArgumentMatchers.<TableSchema<ClientDto>>any())).thenReturn(clientDtoDynamoDbTable);
+
     Mockito.when(clientDtoDynamoDbTable.query(ArgumentMatchers.any(QueryConditional.class)))
         .thenReturn(pageIterable);
+
     Mockito.when(pageIterable.items()).thenReturn(sdkIterableItems);
+
     Mockito.when(sdkIterableItems.stream()).thenReturn(clientDtoStream);
   }
 
@@ -65,6 +69,15 @@ public class ClientCreateTest extends BaseTestContext {
 
     this.mockMvc.perform(get(Constants.CLIENTS_URL))
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  void givenServerErrorOccursWhenGetClientsIsCalledShouldReturnCorrectResponse() throws Exception {
+    Mockito.when(clientDtoDynamoDbTable.query(ArgumentMatchers.any(QueryConditional.class)))
+        .thenThrow(DataProcessingException.class);
+
+    this.mockMvc.perform(get(Constants.CLIENTS_URL))
+        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
   }
 
   @Test

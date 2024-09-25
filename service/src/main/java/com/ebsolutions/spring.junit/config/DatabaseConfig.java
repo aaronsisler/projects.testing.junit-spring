@@ -2,6 +2,7 @@ package com.ebsolutions.spring.junit.config;
 
 
 import com.ebsolutions.spring.junit.Constants;
+import java.net.URI;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -15,42 +16,41 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-import java.net.URI;
-
 @Slf4j
 @Configuration
 public class DatabaseConfig {
-    @Getter
-    @Value("${database.tableName:`Database table name not found in environment`}")
-    public String tableName;
+  @Getter
+  @Value("${database.tableName:`Database table name not found in environment`}")
+  public String tableName;
 
-    @Value("${database.endpoint:`Database endpoint not found in environment`}")
-    protected String endpoint;
+  @Value("${database.endpoint:`Database endpoint not found in environment`}")
+  protected String endpoint;
 
-    @Bean
-    @Profile({"local"})
-    public DynamoDbEnhancedClient localClientInstantiation() {
-        System.out.println("APP: INSIDE: DatabaseConfig: localClientInstantiation");
+  @Bean
+  @Profile({"local"})
+  public DynamoDbEnhancedClient localClientInstantiation() {
+    System.out.println("APP: INSIDE: DatabaseConfig: localClientInstantiation");
 
-        DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
-                .endpointOverride(URI.create(endpoint))
-                .region(Region.US_EAST_1)
-                .credentialsProvider(staticCredentialsProvider())
-                .build();
+    DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
+        .endpointOverride(URI.create(endpoint))
+        .region(Region.US_EAST_1)
+        .credentialsProvider(staticCredentialsProvider())
+        .build();
 
-        return DynamoDbEnhancedClient.builder().dynamoDbClient(dynamoDbClient).build();
-    }
+    return DynamoDbEnhancedClient.builder().dynamoDbClient(dynamoDbClient).build();
+  }
 
-    @Bean
-    @Profile({"default"})
-    public DynamoDbEnhancedClient defaultDynamoDbEnhancedClient() {
-        throw new NotImplementedException(Constants.PROFILE_NOT_SUPPORTED);
-    }
+  @Bean
+  @Profile({"default"})
+  public DynamoDbEnhancedClient defaultDynamoDbEnhancedClient() {
+    throw new NotImplementedException(Constants.PROFILE_NOT_SUPPORTED);
+  }
 
-    private StaticCredentialsProvider staticCredentialsProvider() {
-        String awsAccessKeyId = "accessKeyId";
-        String awsSecretAccessKey = "secretAccessKey";
+  private StaticCredentialsProvider staticCredentialsProvider() {
+    String awsAccessKeyId = "accessKeyId";
+    String awsSecretAccessKey = "secretAccessKey";
 
-        return StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey));
-    }
+    return StaticCredentialsProvider.create(
+        AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey));
+  }
 }

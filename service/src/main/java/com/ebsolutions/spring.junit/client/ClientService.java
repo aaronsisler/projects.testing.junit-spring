@@ -1,24 +1,20 @@
 package com.ebsolutions.spring.junit.client;
 
 import com.ebsolutions.spring.junit.model.Client;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
+@AllArgsConstructor
 public class ClientService {
-    private final ClientDao clientDao;
+  private final ClientDao clientDao;
 
-    public ClientService(ClientDao clientDao) {
-//        System.out.println("APP: INSIDE: Constructor: ClientService");
-        this.clientDao = clientDao;
-    }
+  public List<Client> create(List<Client> clients) {
+    return clientDao.create(clients);
+  }
 
-    public List<Client> create(List<Client> clients) {
-        return clientDao.create(clients);
-    }
-
-    public List<Client> readAll() {
-        return clientDao.readAll();
-    }
+  public List<Client> readAll() {
+    return clientDao.readAll();
+  }
 }

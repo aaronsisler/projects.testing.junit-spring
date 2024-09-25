@@ -19,18 +19,14 @@
         <!-- Versions: Plugins-->
 
         <!-- Versions: Dependencies -->
-        <version.org.projectlombok.lombok>1.18.34</version.org.projectlombok.lombok>
-        <version.software.amazon.awssdk.bom>2.27.9</version.software.amazon.awssdk.bom>
-        <version.org.apache.commons.commons-lang3>3.13.0</version.org.apache.commons.commons-lang3>
-        <version.org.openapitools.jackson-databind-nullable>
-            0.2.6
-        </version.org.openapitools.jackson-databind-nullable>
-        <version.org.springdoc.springdoc-openapi-starter-webmvc-ui>
-            2.6.0
-        </version.org.springdoc.springdoc-openapi-starter-webmvc-ui>
+        <lombok.version>1.18.34</lombok.version>
+        <software.amazon.awssdk.bom.version>2.27.9</software.amazon.awssdk.bom.version>
+        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
 
         <!-- Versions: Testing -->
-        <version.org.junit.junit-bom>5.10.3</version.org.junit.junit-bom>
+        <junit-bom.version>5.10.3</junit-bom.version>
     </properties>
 
     <dependencyManagement>
@@ -40,7 +36,7 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>${version.software.amazon.awssdk.bom}</version>
+                <version>${software.amazon.awssdk.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -49,7 +45,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>${version.org.junit.junit-bom}</version>
+                <version>${junit-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -120,7 +116,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${version.org.springdoc.springdoc-openapi-starter-webmvc-ui}</version>
+            <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
         </dependency>
 
         <!-- Used for POJO annotations within project -->
@@ -128,7 +124,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${version.org.projectlombok.lombok}</version>
+            <version>${lombok.version}</version>
         </dependency>
 
         <!-- StringUtils util that checks for empty strings, etc. -->
@@ -136,7 +132,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${version.org.apache.commons.commons-lang3}</version>
+            <!--            <version>${version.org.apache.commons.commons-lang3}</version>-->
         </dependency>
 
         <!-- Used for the validation annotations -->
@@ -144,7 +140,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>${version.org.openapitools.jackson-databind-nullable}</version>
+            <version>${jackson-databind-nullable.version}</version>
         </dependency>
 
         <!-- END: Third Party Dependencies -->
@@ -164,6 +160,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
             <!-- Gives the actuator/info API build information -->
             <!-- Version: Spring Parent -->
             <plugin>

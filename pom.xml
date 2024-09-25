@@ -26,8 +26,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Versions: Plugins -->
-        <version.plugins.maven-surefire-plugin>3.2.5</version.plugins.maven-surefire-plugin>
-        <version.plugins.openapi-generator-maven-plugin>7.5.0</version.plugins.openapi-generator-maven-plugin>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <openapi-generator-maven-plugin.version>7.5.0</openapi-generator-maven-plugin.version>
+        <checkstyle-maven-plugin.version>3.5.0</checkstyle-maven-plugin.version>
 
         <!-- Versions: Dependencies -->
 
@@ -41,12 +42,27 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle-maven-plugin.version}</version>
+                    <configuration>
+                        <configLocation>google_checks.xml</configLocation>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <!-- This allows all unit tests to complete, finish tear down, and then report failures -->
                 <!-- Version: Explicit -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${version.plugins.maven-surefire-plugin}</version>
+                    <version>${maven-surefire-plugin.version}</version>
                 </plugin>
 
                 <!-- Generates Java classes from OpenAPI contracts -->
@@ -54,7 +70,7 @@
                 <plugin>
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>${version.plugins.openapi-generator-maven-plugin}</version>
+                    <version>${openapi-generator-maven-plugin.version}</version>
                     <configuration>
                         <modelPackage>com.ebsolutions.spring.junit.model</modelPackage>
                         <generatorName>spring</generatorName>

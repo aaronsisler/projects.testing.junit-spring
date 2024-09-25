@@ -28,7 +28,7 @@ public class ClientController {
 
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> create(@RequestBody List<@Valid Client> clients) {
+  public ResponseEntity<?> post(@RequestBody List<@Valid Client> clients) {
     try {
       return ResponseEntity.ok(clientService.create(clients));
     } catch (DataProcessingException dpe) {

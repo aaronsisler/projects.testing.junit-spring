@@ -5,6 +5,7 @@ import com.ebsolutions.spring.junit.shared.exception.DataProcessingException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class ClientController {
 
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> post(@RequestBody List<@Valid Client> clients) {
+  public ResponseEntity<?> post(@RequestBody @NotEmpty List<@Valid Client> clients) {
     try {
       return ResponseEntity.ok(clientService.create(clients));
     } catch (DataProcessingException dpe) {

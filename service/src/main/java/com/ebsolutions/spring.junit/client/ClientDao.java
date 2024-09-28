@@ -19,7 +19,6 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteItemEnhancedRequest;
-import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteResult;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.WriteBatch;
 
@@ -69,6 +68,7 @@ public class ClientDao {
 
       List<ClientDto> clientDtos = new ArrayList<>();
 
+      // TODO LEARN Parallel and go faster
       clients.forEach(client ->
           clientDtos.add(ClientDto.builder()
               .partitionKey(SortKeyType.CLIENT.name())
@@ -87,18 +87,18 @@ public class ClientDao {
           .mappedTableResource(clientDtoDynamoDbTable())
           .build();
 
-      BatchWriteResult batchWriteResult =
-          this.dynamoDbEnhancedClient.batchWriteItem(
-              BatchWriteItemEnhancedRequest
-                  .builder()
-                  .addWriteBatch(writeBatch)
-                  .build()
-          );
+//      BatchWriteResult batchWriteResult =
+      this.dynamoDbEnhancedClient.batchWriteItem(
+          BatchWriteItemEnhancedRequest
+              .builder()
+              .addWriteBatch(writeBatch)
+              .build()
+      );
 
-      if (!batchWriteResult.unprocessedPutItemsForTable(clientDtoDynamoDbTable()).isEmpty()) {
-        batchWriteResult.unprocessedPutItemsForTable(clientDtoDynamoDbTable()).forEach(key ->
-            log.info(key.toString()));
-      }
+//      if (!batchWriteResult.unprocessedPutItemsForTable(clientDtoDynamoDbTable()).isEmpty()) {
+//        batchWriteResult.unprocessedPutItemsForTable(clientDtoDynamoDbTable()).forEach(key ->
+//            log.info(key.toString()));
+//      }
 
       return clientDtos.stream().map(clientDto ->
           Client.builder()

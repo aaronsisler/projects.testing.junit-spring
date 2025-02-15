@@ -1,20 +1,18 @@
 package com.ebsolutions.spring.junit;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@SpringBootTest
-public class EmptySpringBootTest {
 
-    @Autowired
-    private SpringJunitServiceApplication application;
+public class EmptySpringBootTest extends BaseTestContext {
 
-    @Test
-    void contextLoads() {
-        assertThat(application).isNotNull();
-    }
+  @Autowired
+  private SpringJunitServiceApplication application;
+
+  @Test
+  void contextLoads() {
+    assertThat(application).isNotNull();
+  }
 }
